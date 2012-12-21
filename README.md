@@ -7,16 +7,18 @@ Setup Lyricue on a Raspberry Pi
 
 2. Unzip image and write to SD card
 
-    unzip archlinux-hf-2012-09-18.zip
-    dd bs=1M if=archlinux-hf-2012-09-18.img of=/dev/sdX
+        unzip archlinux-hf-2012-09-18.zip
+        dd bs=1M if=archlinux-hf-2012-09-18.img of=/dev/sdX
 
 3. Move SD card to Pi and boot it
 
 4. Login via ssh or console
 
-root/root
+    root/root
 
-4. Execute init script:
+4. Execute init script to configure archlinux with a graphical interface
 
-    sh <(curl https://github.com/alerque/picue/blob/master/archlinux_init.sh)
+        sh <(curl https://github.com/alerque/picue/blob/master/archlinux_init.sh)
     reboot
+
+5. Build and install lyricue
