@@ -22,11 +22,12 @@ if lspci | grep -c VirtualBox; then
 	#echo 'VBoxClient-all &' >> .xinitrc
 fi
 
-git clone git://github.com/alerque/picue.git
-cd picue
-makepkg --asroot
-
-if [ ! -f /usr/bin/rpi-update ]; then
+if [ $(uname -m) == "armv6l" ]; then
 	curl -L http://goo.gl/1BOfJ > /usr/bin/rpi-update && chmod +x /usr/bin/rpi-update
 	rpi-update
 fi
+
+git clone git://github.com/alerque/picue.git
+cd picue
+makepkg --asroot --noconfirm -s -i
+
