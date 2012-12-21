@@ -23,7 +23,7 @@ source=(http://www.lyricue.org/archive/${pkgname}_$pkgver.tar.gz https://github.
 noextract=()
 md5sums=('7276c53c70a3b4334f0d4cc2a7ba9539'
          'f999984a8f5659129b237f25c657cfae'
-         '82c93094c3d33575927d5e176248496f')
+         'b2bc18a48be5f8fc3ebe8fbc5d7d4fa0')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
