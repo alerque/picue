@@ -22,10 +22,11 @@ if lspci | grep -c VirtualBox; then
 	#echo 'VBoxClient-all &' >> .xinitrc
 fi
 
-mkdir -p ~/abs/lyricue
-cd ~/abs/lyricue
+git clone git://github.com/alerque/picue.git
+cd picue
+makepkg --asroot
 
 if [ ! -f /usr/bin/rpi-update ]; then
-	curl http://goo.gl/1BOfJ > /usr/bin/rpi-update && chmod +x /usr/bin/rpi-update
+	curl -L http://goo.gl/1BOfJ > /usr/bin/rpi-update && chmod +x /usr/bin/rpi-update
 	rpi-update
 fi
