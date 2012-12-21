@@ -14,6 +14,7 @@ exec awesome' > .xinitrc
 
 if lspci | grep -c VirtualBox; then
 	pacman --noconfirm -S openssh virtualbox-guest-utils
+	servicectl start sshd
 	modprobe -a vboxguest vboxsf vboxvideo
 	echo "vboxguest
 	vboxsf
