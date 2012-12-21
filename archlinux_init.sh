@@ -6,10 +6,11 @@ ln -sf /usr/share/zoneinfo/Turkey /etc/localtime
 pacman --noconfirm -Syu
 pacman-key --init
 pacman --noconfirm -S xorg-server xorg-xinit xorg-server-utils xf86-video-fbdev mesa
-pacman --noconfirm -S alsa-firmware alsa-utils alsa-oss
+pacman --noconfirm -S alsa-firmware alsa-utils
 pacman --noconfirm -S vim sudo awesome git rxvt-unicode tmux
 
-echo 'exec awesome' > .xinitrc
+echo 'urxvt &
+exec awesome' > .xinitrc
 
 if lspci | grep -c VirtualBox; then
 	pacman --noconfirm -S openssh virtualbox-guest-utils
