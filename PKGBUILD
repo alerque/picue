@@ -25,8 +25,8 @@ md5sums=('7276c53c70a3b4334f0d4cc2a7ba9539')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
-  patch -Np0 -i "../clutter-gst.patch"
-  patch -Np0 -i "../gstreamer.patch"
+  patch -Np0 -i "$srcdir/../../clutter-gst.patch"
+  patch -Np0 -i "$srcdir/../../gstreamer.patch"
   ./configure --prefix=/usr
   make
 }
