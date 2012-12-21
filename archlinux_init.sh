@@ -7,7 +7,7 @@ pacman --noconfirm -Syu
 pacman-key --init
 pacman --noconfirm -S xorg-server xorg-xinit xorg-server-utils xf86-video-fbdev mesa
 pacman --noconfirm -S alsa-firmware alsa-utils
-pacman --noconfirm -S vim sudo awesome git rxvt-unicode tmux gnu-netcat
+pacman --noconfirm -S vim sudo awesome git rxvt-unicode tmux gnu-netcat zsh
 
 echo 'urxvt &
 exec awesome' > .xinitrc
@@ -22,10 +22,10 @@ if lspci | grep -c VirtualBox; then
 	#echo 'VBoxClient-all &' >> .xinitrc
 fi
 
-if [ $(uname -m) == "armv6l" ]; then
-	curl -L http://goo.gl/1BOfJ > /usr/bin/rpi-update && chmod +x /usr/bin/rpi-update
-	rpi-update
-fi
+#if [ $(uname -m) == "armv6l" ]; then
+#	curl -L http://goo.gl/1BOfJ > /usr/bin/rpi-update && chmod +x /usr/bin/rpi-update
+#	rpi-update
+#fi
 
 git clone git://github.com/alerque/picue.git
 cd picue
