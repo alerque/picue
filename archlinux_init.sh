@@ -7,7 +7,7 @@ pacman --noconfirm -Syu
 pacman-key --init
 pacman --noconfirm -S xorg-server xorg-xinit xorg-server-utils xf86-video-fbdev mesa
 pacman --noconfirm -S alsa-firmware alsa-utils
-pacman --noconfirm -S vim sudo awesome git rxvt-unicode tmux
+pacman --noconfirm -S vim sudo awesome git rxvt-unicode tmux gnu-netcat
 
 echo 'urxvt &
 exec awesome' > .xinitrc

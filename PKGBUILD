@@ -21,7 +21,8 @@ install=
 changelog=
 source=(http://www.lyricue.org/archive/${pkgname}_$pkgver.tar.gz https://github.com/alerque/picue/raw/master/clutter-gst.patch https://github.com/alerque/picue/raw/master/gstreamer.patch)
 noextract=()
-md5sums=('7276c53c70a3b4334f0d4cc2a7ba9539')
+md5sums=('7276c53c70a3b4334f0d4cc2a7ba9539' '3227154b13e270a19503d636f72a896e' '6eb4ab62bbc09c4a6a2dbdfe76799703')
+
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
