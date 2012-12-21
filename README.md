@@ -18,7 +18,7 @@ Setup Lyricue on a Raspberry Pi
 
 4. Execute init script to configure archlinux with a graphical interface
 
-        sh <(curl https://github.com/alerque/picue/raw/master/archlinux_init.sh)
+        sh <(curl https://raw.github.com/alerque/picue/master/archlinux_init.sh)
     reboot
 
 5. Build and install lyricue
