@@ -3,18 +3,24 @@
 echo picue > /etc/hostname
 ln -sf /usr/share/zoneinfo/Turkey /etc/localtime
 
+if [ -f "/var/lib/pacman/db.lck" ]; then
+	echo "Package lock file '/var/lib/pacman/db.lck' exists. Please cleanup previous failed instalation before running."
+	exit
+fi
+
 pacman --noconfirm -Syu
 pacman-key --init
-pacman --noconfirm -S xorg-server xorg-xinit xorg-server-utils xf86-video-fbdev mesa
+pacman --noconfirm -S xorg-server xorg-xinit xorg-server-utils xf86-video-fbdev mesa xf86-input-evdev
 pacman --noconfirm -S alsa-firmware alsa-utils
-pacman --noconfirm -S vim sudo awesome git rxvt-unicode tmux gnu-netcat zsh
+pacman --noconfirm -S vim sudo awesome git rxvt-unicode tmux gnu-netcat zsh ttf-liberation
+pacman --noconfirm -S base-devel
 
 echo 'urxvt &
 exec awesome' > .xinitrc
 
 if lspci | grep -c VirtualBox; then
 	pacman --noconfirm -S openssh virtualbox-guest-utils
-	servicectl start sshd
+	systemctl start sshd
 	modprobe -a vboxguest vboxsf vboxvideo
 	echo "vboxguest
 	vboxsf
