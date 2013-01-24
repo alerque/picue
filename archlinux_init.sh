@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd
+
 echo picue > /etc/hostname
 ln -sf /usr/share/zoneinfo/Turkey /etc/localtime
 
@@ -18,7 +20,7 @@ pacman --noconfirm -S base-devel
 echo 'urxvt &
 exec awesome' > .xinitrc
 
-if lspci | grep -c VirtualBox; then
+if lspci 2> /dev/null | grep -c VirtualBox; then
 	pacman --noconfirm -S openssh virtualbox-guest-utils
 	systemctl start sshd
 	modprobe -a vboxguest vboxsf vboxvideo
@@ -33,7 +35,7 @@ fi
 #	rpi-update
 #fi
 
-git clone git://github.com/alerque/picue.git
-cd picue
-makepkg --asroot --noconfirm -s -i
-
+if git clone git://github.com/alerque/picue.git; then
+	cd picue
+	makepkg --asroot --noconfirm -s -i
+fi
