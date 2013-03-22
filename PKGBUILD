@@ -1,6 +1,6 @@
 # Maintainer: Caleb Maclennan <caleb@alerque.com>
 pkgname=lyricue
-pkgver=3.4.10
+pkgver=3.5.5
 pkgrel=1
 epoch=
 pkgdesc="GNU Lyric Display System, client interface"
@@ -21,7 +21,7 @@ install=
 changelog=
 source=(http://www.lyricue.org/archive/${pkgname}_$pkgver.tar.gz https://github.com/alerque/picue/raw/master/clutter-gst.patch https://github.com/alerque/picue/raw/master/gstreamer.patch)
 noextract=()
-md5sums=('7276c53c70a3b4334f0d4cc2a7ba9539'
+md5sums=('fb32a72110c7f1dd006fbca9828dc5da'
          '2a7d01a8bf2db4881b93b64995668b40'
          'b2bc18a48be5f8fc3ebe8fbc5d7d4fa0')
 
@@ -44,4 +44,3 @@ package() {
 }
 
 # vim:set ts=2 sw=2 et:
-
