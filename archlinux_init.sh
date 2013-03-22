@@ -1,9 +1,18 @@
 #!/bin/sh
 
-cd
+# Options
 
-echo picue > /etc/hostname
+hostname=picue
+
+# Host setup
+cd
+echo $hostname > /etc/hostname
 ln -sf /usr/share/zoneinfo/Turkey /etc/localtime
+
+passwd <<EOF
+picue$hostname
+picue$hostname
+EOF
 
 if [ -f "/var/lib/pacman/db.lck" ]; then
 	echo "Package lock file '/var/lib/pacman/db.lck' exists. Please cleanup previous failed instalation before running."
@@ -12,6 +21,7 @@ fi
 
 # TODO: check and if possible grow main partition
 do_expand_rootfs() {
+	pacman --noconfirm -S parted
 	#SOURCE: https://github.com/asb/raspi-config/blob/master/raspi-config
   fdisk /dev/mmcblk0 <<EOF
 p
@@ -25,6 +35,7 @@ p
 p
 w
 EOF
+partprobe
 resize2fs /dev/mmcblk0p2
 }
 
