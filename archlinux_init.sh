@@ -3,13 +3,15 @@
 # Options
 hostname=picue
 
+cd
+
 case $1 in
 	1|host)
-
 		# Host setup
-		cd
 		echo $hostname > /etc/hostname
 		ln -sf /usr/share/zoneinfo/Turkey /etc/localtime
+		echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+		locale-gen
 
 		passwd <<- EOF
 			picue$hostname
@@ -79,6 +81,17 @@ case $1 in
 	5|data)
 		mysql < /usr/share/lyricue/mysql/Create_lyricDb.sql
 		mysql < /usr/share/lyricue/mysql/Create_mediaDb.sql
+
+		wget http://www.lyricue.org/bible_files/MySQL_create_bible_NASB.sql.gz -O /tmp/bible.sql.gz
+		gzip -dc /tmp/bible.sql.gz | mysql
+
+		mysql -e "GRANT ALL ON lyricDb.* TO 'lyric'@'%';"
+		mysql -e "GRANT ALL ON mediaDb.* TO 'lyric'@'%';"
+		mysql -e "GRANT ALL ON bibleDb.* TO 'lyric'@'%';"
+		mysql -e "GRANT ALL ON lyricDb.* TO ''@'%';"
+		mysql -e "GRANT ALL ON mediaDb.* TO ''@'%';"
+		mysql -e "GRANT ALL ON bibleDb.* TO ''@'%';"
+
 
 		mkdir -p ~/.local/share/lyricue
 		cat <<- EOF > ~/.local/share/lyricue/config2
