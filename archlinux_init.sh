@@ -14,20 +14,19 @@ cd /root
 test "$UID" -eq 0 || flunk "Need to be root"
 
 reboot_and_continue() {
-	curl -L http://goo.gl/xxGyv > /root/picue-setup
+	curl -L http://goo.gl/xxGyv > /root/picue-setup.sh
 	cat <<- EOF > /usr/lib/systemd/system/picue-setup.service
 		[Unit]
-		Description=Return to where Picue setup script left off
-		Wants=network.target
+		Description=Picue setup script post-reboot continue script
 		
 		[Service]
-		ExecStart=/bin/sh /root/picue-setup
+		ExecStart=/bin/sh /root/picue-setup.sh
 		Type=oneshot
 
 		[Install]
 		WantedBy=multi-user.target
 		EOF
-	systemctl enable picue-setup && reboot
+	systemctl --no-reload enable picue-setup && reboot
 	exit
 }
 
@@ -99,8 +98,8 @@ init_host() {
 init_host
 
 # Cleanup after ourselves
+systemctl --no-reload disable picue-setup
 rm /usr/lib/systemd/system/picue-setup.service
-systemctl --noreload disable picue-setup
 
 exit
 #old stuff
