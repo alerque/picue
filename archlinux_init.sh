@@ -87,16 +87,92 @@ init_host() {
 }
 
 install_packages() {
-	pacman --noconfirm -S xorg-server xorg-xinit xorg-server-utils xf86-video-fbdev mesa xf86-input-evdev
+	pacman --noconfirm -S xorg-server xorg-xinit xorg-server-utils xf86-video-fbdev xf86-input-evdev mesa 
 	pacman --noconfirm -S alsa-firmware alsa-utils
-	pacman --noconfirm -S vim sudo awesome git rxvt-unicode tmux gnu-netcat zsh ttf-liberation
-	pacman --noconfirm -S base-devel
+	pacman --noconfirm -S zsh vim sudo git tmux gnu-netcat
+	pacman --noconfirm -S awesome rxvt-unicode ttf-liberation
 	pacman --noconfirm -S mysql
+}
+
+build_lyricue() {
+	pushd $PWD
+	pacman --noconfirm -S base-devel
+	if [ -d "~/picue" ]; then
+		cd picue
+		git pull
+	else
+		git clone git://github.com/alerque/picue.git
+		cd picue
+	fi
+	makepkg --asroot --noconfirm -s -i
+	popd
+}
+
+import_mysql_data() {
+	mysql < /usr/share/lyricue/mysql/Create_lyricDb.sql
+	mysql < /usr/share/lyricue/mysql/Create_mediaDb.sql
+
+	wget http://www.lyricue.org/bible_files/MySQL_create_bible_NASB.sql.gz -O /tmp/bible.sql.gz
+	gzip -dc /tmp/bible.sql.gz | mysql
+
+	mysql -e "GRANT ALL ON lyricDb.* TO 'lyric'@'%';"
+	mysql -e "GRANT ALL ON mediaDb.* TO 'lyric'@'%';"
+	mysql -e "GRANT ALL ON bibleDb.* TO 'lyric'@'%';"
+	mysql -e "GRANT ALL ON lyricDb.* TO ''@'%';"
+	mysql -e "GRANT ALL ON mediaDb.* TO ''@'%';"
+	mysql -e "GRANT ALL ON bibleDb.* TO ''@'%';"
+}
+
+configure_x() {
+	cat <<- EOF > ~/.xinitrc
+		urxvt &
+		exec awesome
+		EOF
+	mkdir -p ~/.local/share/lyricue
+	cat <<- EOF > ~/.local/share/lyricue/config2
+		Main = Sans 40
+		Header = Sans 20
+		Footer = Sans 20
+		OSD = Sans 30
+		Colour = #ffffff
+		ShadowColour = #000000
+		ShadowSize = 2
+		Height = 800
+		Width = 1280
+		OverscanH = 0
+		OverscanV = 0
+		Loop = 1
+		Audit = 1
+		DynamicPreview = 1
+		Miniview = 0
+		Xinerama = 1
+		CentreX = 1
+		CentreY = 1
+		BGImage = 1
+		SpecialSong = Today's Announcements
+		SpecialImage = Solid
+		SpecialBack = Solid
+		ImageDirectory = ~/Pictures
+		BGDirectory = ~/Pictures
+		HorizontalLocation = Centre
+		VerticalLocation = Centre
+		Justification = Left
+		TrayIcons = 1
+		DatabaseType = mysql
+		DefBible =
+		App = OpenOffice Impress;ooimpress
+		App = Movie Player;totem
+		Preset1 = Used with permission CCLI 23232
+		Preset2 = Used without permission
+		EOF
 }
 
 # Logic
 init_host
-#install_packages
+install_packages
+#build_lyricue
+#import_mysql_data
+#configure_x
 
 # Cleanup after ourselves
 if [ -f "/usr/lib/systemd/system/picue-setup.service" ]; then
@@ -108,8 +184,8 @@ exit
 
 #old stuff
 case $1 in
-	vmode)
-		pacman -S fbset
+	fbdev_driver)
+		pacman --noconfirm -S fbset
 		setvmode() {
 			cat <<- EOF >> /boot/config.txt
 			framebuffer_depth=32
@@ -121,7 +197,6 @@ case $1 in
 			cma_offline_start=16
 			EOF
 		}
-
 	;;
 	2|vbox)
 		if lspci 2> /dev/null | grep -c VirtualBox; then
@@ -133,74 +208,5 @@ case $1 in
 			vboxvideo" > /etc/modules-load.d/virtualbox.conf
 			#echo 'VBoxClient-all &' >> .xinitrc
 		fi
-	;;
-	3|build)
-		pushd $PWD
-		if [ -d "~/picue" ]; then
-			cd picue
-			git pull
-		else
-			git clone git://github.com/alerque/picue.git
-			cd picue
-		fi
-		makepkg --asroot --noconfirm -s -i
-		popd
-	;;
-	4|user)
-		echo 'urxvt &
-		exec awesome' > .xinitrc
-	;;
-	5|data)
-		mysql < /usr/share/lyricue/mysql/Create_lyricDb.sql
-		mysql < /usr/share/lyricue/mysql/Create_mediaDb.sql
-
-		wget http://www.lyricue.org/bible_files/MySQL_create_bible_NASB.sql.gz -O /tmp/bible.sql.gz
-		gzip -dc /tmp/bible.sql.gz | mysql
-
-		mysql -e "GRANT ALL ON lyricDb.* TO 'lyric'@'%';"
-		mysql -e "GRANT ALL ON mediaDb.* TO 'lyric'@'%';"
-		mysql -e "GRANT ALL ON bibleDb.* TO 'lyric'@'%';"
-		mysql -e "GRANT ALL ON lyricDb.* TO ''@'%';"
-		mysql -e "GRANT ALL ON mediaDb.* TO ''@'%';"
-		mysql -e "GRANT ALL ON bibleDb.* TO ''@'%';"
-
-
-		mkdir -p ~/.local/share/lyricue
-		cat <<- EOF > ~/.local/share/lyricue/config2
-			Main = Sans 40
-			Header = Sans 20
-			Footer = Sans 20
-			OSD = Sans 30
-			Colour = #ffffff
-			ShadowColour = #000000
-			ShadowSize = 2
-			Height = 800
-			Width = 1280
-			OverscanH = 0
-			OverscanV = 0
-			Loop = 1
-			Audit = 1
-			DynamicPreview = 1
-			Miniview = 0
-			Xinerama = 1
-			CentreX = 1
-			CentreY = 1
-			BGImage = 1
-			SpecialSong = Today's Announcements
-			SpecialImage = Solid
-			SpecialBack = Solid
-			ImageDirectory = ~/Pictures
-			BGDirectory = ~/Pictures
-			HorizontalLocation = Centre
-			VerticalLocation = Centre
-			Justification = Left
-			TrayIcons = 1
-			DatabaseType = mysql
-			DefBible =
-			App = OpenOffice Impress;ooimpress
-			App = Movie Player;totem
-			Preset1 = Used with permission CCLI 23232
-			Preset2 = Used without permission
-			EOF
 	;;
 esac
