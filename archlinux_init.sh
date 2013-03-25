@@ -15,13 +15,18 @@ test "$UID" -eq 0 || flunk "Need to be root"
 
 reboot_and_continue() {
 	curl -L http://goo.gl/xxGyv > /root/picue-setup.sh
+	chmod 755 /root/picue-setup.sh
 	cat <<- EOF > /usr/lib/systemd/system/picue-setup.service
 		[Unit]
 		Description=Picue setup script post-reboot continue script
+		ConditionPathExists=/root/picue-setup.sh
 		
 		[Service]
-		ExecStart=/bin/sh /root/picue-setup.sh
-		Type=oneshot
+		Type=forking
+		TimeoutSec=0
+		StandardOutput=tty
+		RemainAfterExit=yes
+		ExecStart=/root/picue-setup.sh
 
 		[Install]
 		WantedBy=multi-user.target
