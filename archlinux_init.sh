@@ -185,9 +185,9 @@ configure_x() {
 # Logic
 init_host
 install_packages
-#build_lyricue
+build_lyricue
 setup_mysql
-#configure_x
+configure_x
 
 # Cleanup after ourselves
 if [ -f "/usr/lib/systemd/system/picue-setup.service" ]; then
