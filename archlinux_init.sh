@@ -22,11 +22,15 @@ fi
 init_host() {
 	# Host setup
 	echo $hostname > /etc/hostname
+
 	ln -sf /usr/share/zoneinfo/Turkey /etc/localtime
-	cat <<- EOF > /etc/locale.gen
-		en_US.UTF-8 UTF-8
-		EOF
-	locale-gen
+
+	if ! locale | grep -q UTF-8; then
+		cat <<- EOF > /etc/locale.gen
+			en_US.UTF-8 UTF-8
+			EOF
+		locale-gen
+	fi
 
 	passwd <<- EOF
 		picue$hostname
