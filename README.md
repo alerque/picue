@@ -3,12 +3,12 @@ picue
 
 Setup Lyricue on a Raspberry Pi
 
-1. Download archlinux image via [this torrent](http://downloads.raspberrypi.org/images/archlinuxarm/archlinux-hf-2012-09-18/archlinux-hf-2012-09-18.zip.torrent).
+1. Download archlinux image via [this torrent](http://downloads.raspberrypi.org/images/archlinuxarm/archlinux-hf-2013-02-11/archlinux-hf-2013-02-11.zip.torrent).
 
 2. Unzip image and write to SD card
 
-        unzip archlinux-hf-2012-09-18.zip
-        dd bs=1M if=archlinux-hf-2012-09-18.img of=/dev/sdX
+        unzip archlinux-hf-2013-02-11.zip
+        dd bs=1M if=archlinux-hf-2013-02-11.img of=/dev/sdX
 
 3. Move SD card to Pi and boot it
 
