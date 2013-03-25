@@ -19,6 +19,7 @@ reboot_and_continue() {
 	cat <<- EOF > /usr/lib/systemd/system/picue-setup.service
 		[Unit]
 		Description=Return to where Picue setup script left off
+		Wants=network.target
 		
 		[Service]
 		ExecStart=/bin/sh <(/bin/curl -L http://goo.gl/xxGyv)
