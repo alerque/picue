@@ -3,7 +3,16 @@
 # Options
 hostname=picue
 
+
+# Get off on the right foot
 cd
+test "$UID" -eq 0 || flunk "Need to be root"
+
+function flunk () {
+	echo $*
+	exit 1
+}
+
 
 case $1 in
 	1|host)
@@ -57,6 +66,21 @@ case $1 in
 		pacman --noconfirm -S base-devel
 		pacman --noconfirm -S mysql
 	;;
+	vmode)
+		pacman -S fbset
+		function setvmode() {
+			cat <<- EOF >> /boot/config.txt
+			framebuffer_depth=32
+			framebuffer_ignore_alpha=1
+			gpu_mem_256=112
+			gpu_mem_512=368
+			cma_lwm=16
+			cma_hwm=32
+			cma_offline_start=16
+			EOF
+		}
+
+	;;
 	2|vbox)
 		if lspci 2> /dev/null | grep -c VirtualBox; then
 			pacman --noconfirm -S openssh virtualbox-guest-utils
@@ -69,10 +93,16 @@ case $1 in
 		fi
 	;;
 	3|build)
-		if git clone git://github.com/alerque/picue.git; then
+		pushd $PWD
+		if [ -d "~/picue" ]; then
 			cd picue
-			makepkg --asroot --noconfirm -s -i
+			git pull
+		else
+			git clone git://github.com/alerque/picue.git
+			cd picue
 		fi
+		makepkg --asroot --noconfirm -s -i
+		popd
 	;;
 	4|user)
 		echo 'urxvt &
