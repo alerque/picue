@@ -16,12 +16,12 @@ fi
 # Do stuff we want done every time
 init_host()
 
-function flunk () {
-	echo $*
+flunk() {
+	echo "$@"
 	exit 1
 }
 
-function init_host() {
+init_host() {
 	# Host setup
 	echo $hostname > /etc/hostname
 	ln -sf /usr/share/zoneinfo/Turkey /etc/localtime
@@ -74,7 +74,7 @@ function init_host() {
 case $1 in
 	vmode)
 		pacman -S fbset
-		function setvmode() {
+		setvmode() {
 			cat <<- EOF >> /boot/config.txt
 			framebuffer_depth=32
 			framebuffer_ignore_alpha=1
