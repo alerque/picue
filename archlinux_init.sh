@@ -37,8 +37,8 @@ init_host() {
 		picue$hostname
 		EOF
 
-	#pacman --noconfirm -Syu
-	#pacman-key --init
+	pacman --noconfirm -Syu
+	pacman-key --init
 	return
 
 	# TODO: check and if possible grow main partition
