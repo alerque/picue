@@ -84,7 +84,9 @@ init_host() {
 	#	curl -L http://goo.gl/1BOfJ > /usr/bin/rpi-update && chmod +x /usr/bin/rpi-update
 	#	rpi-update
 	#fi
+}
 
+install_packages() {
 	pacman --noconfirm -S xorg-server xorg-xinit xorg-server-utils xf86-video-fbdev mesa xf86-input-evdev
 	pacman --noconfirm -S alsa-firmware alsa-utils
 	pacman --noconfirm -S vim sudo awesome git rxvt-unicode tmux gnu-netcat zsh ttf-liberation
@@ -93,15 +95,17 @@ init_host() {
 }
 
 # Logic
-
-# Do stuff we want done every time
 init_host
+#install_packages
 
 # Cleanup after ourselves
-systemctl --no-reload disable picue-setup
-rm /usr/lib/systemd/system/picue-setup.service
+if [ -f "/usr/lib/systemd/system/picue-setup.service" ]; then
+	systemctl --no-reload disable picue-setup
+	rm /usr/lib/systemd/system/picue-setup.service
+fi
 
 exit
+
 #old stuff
 case $1 in
 	vmode)
