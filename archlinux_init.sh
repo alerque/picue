@@ -97,6 +97,7 @@ install_packages() {
 	pacman --noconfirm -S zsh vim sudo git tmux gnu-netcat
 	pacman --noconfirm -S awesome rxvt-unicode ttf-liberation
 	pacman --noconfirm -S mysql
+	
 }
 
 build_lyricue() {
@@ -113,7 +114,16 @@ build_lyricue() {
 	popd
 }
 
-import_mysql_data() {
+setup_mysql() {
+	systemctl enable mysqld
+	systemctl start mysqld
+	/usr/bin/mysqladmin -u root password "picue$hostname"
+	/usr/bin/mysqladmin -u root -h picue password "picue$hostname"
+	#TODO: Use this instead
+	#/usr/bin/mysql_secure_installation
+
+	return
+
 	mysql < /usr/share/lyricue/mysql/Create_lyricDb.sql
 	mysql < /usr/share/lyricue/mysql/Create_mediaDb.sql
 
@@ -176,7 +186,7 @@ configure_x() {
 init_host
 install_packages
 #build_lyricue
-#import_mysql_data
+setup_mysql
 #configure_x
 
 # Cleanup after ourselves
