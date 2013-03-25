@@ -42,7 +42,7 @@ init_host() {
 
 	which partprobe || pacman --noconfirm -S parted || flunk "Could not find or get partprobe"
 	end=$(parted /dev/mmcblk0 -ms unit s p | grep "^2" | cut -f 3 -d: | cut -f 1 -ds)
-	max=$(parted /dev/mmcblk0 -ms unit s p | grep "^/" | cut -f 2 -d: | cut -f 1 -ds)
+	max=$(($(parted /dev/mmcblk0 -ms unit s p | grep "^/" | cut -f 2 -d: | cut -f 1 -ds) - 1))
 	if [ $end -lt $max ]; then
 		fdisk /dev/mmcblk0 <<- EOF
 			p
