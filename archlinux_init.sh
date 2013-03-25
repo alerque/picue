@@ -25,7 +25,7 @@ init_host() {
 
 	ln -sf /usr/share/zoneinfo/Turkey /etc/localtime
 
-	if ! locale | grep -q UTF-8; then
+	if ! locale -a | grep -q en_US.utf8 ; then
 		cat <<- EOF > /etc/locale.gen
 			en_US.UTF-8 UTF-8
 			EOF
