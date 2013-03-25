@@ -37,29 +37,30 @@ init_host() {
 		picue$hostname
 		EOF
 
-	pacman --noconfirm -Syu
+	pacman --noconfirm -Syu || flunk "Can't get caught up with ArchLinux"
 	pacman-key --init
+
+	which partprobe || pacman --noconfirm -S parted || flunk "Could not find or get partprobe"
+	end=$(parted /dev/mmcblk0 -ms unit s p | grep "^2" | cut -f 3 -d: | cut -f 1 -ds)
+	max=$(parted /dev/mmcblk0 -ms unit s p | grep "^/" | cut -f 2 -d: | cut -f 1 -ds)
+	if [ $end -lt $max ]; then
+		fdisk /dev/mmcblk0 <<- EOF
+			p
+			d
+			2
+			n
+			p
+			2
+
+
+			p
+			w
+			EOF
+		partprobe
+		resize2fs /dev/mmcblk0p2
+	fi
+
 	return
-
-	# TODO: check and if possible grow main partition
-	do_expand_rootfs() {
-		pacman --noconfirm -S parted
-		#SOURCE: https://github.com/asb/raspi-config/blob/master/raspi-config
-	fdisk /dev/mmcblk0 <<- EOF
-		p
-		d
-		2
-		n
-		p
-		2
-
-
-		p
-		w
-		EOF
-	partprobe
-	resize2fs /dev/mmcblk0p2
-	}
 
 	# TODO: find out if this is even legit any more now that Arch as some pi specific packages
 	#if [ $(uname -m) == "armv6l" ]; then
