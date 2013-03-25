@@ -11,18 +11,17 @@ flunk() {
 
 # Get off on the right foot. We don't know where we're coming from
 cd /root
-systemctl disable picue-setup
-rm /usr/lib/systemd/system/picue-setup.service
 test "$UID" -eq 0 || flunk "Need to be root"
 
 reboot_and_continue() {
+	/bin/curl -L http://goo.gl/xxGyv > /root/picue-setup
 	cat <<- EOF > /usr/lib/systemd/system/picue-setup.service
 		[Unit]
 		Description=Return to where Picue setup script left off
 		Wants=network.target
 		
 		[Service]
-		ExecStart=/bin/sh <(/bin/curl -L http://goo.gl/xxGyv)
+		ExecStart=/bin/sh /root/picue-setup
 		Type=oneshot
 
 		[Install]
@@ -98,6 +97,10 @@ init_host() {
 
 # Do stuff we want done every time
 init_host
+
+# Cleanup after ourselves
+rm /usr/lib/systemd/system/picue-setup.service
+systemctl --noreload disable picue-setup
 
 exit
 #old stuff
