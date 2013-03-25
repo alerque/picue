@@ -4,6 +4,11 @@
 hostname=picue
 timezone=Turkey
 
+flunk() {
+	echo "$@"
+	exit 1
+}
+
 # Get off on the right foot
 cd
 test "$UID" -eq 0 || flunk "Need to be root"
@@ -13,14 +18,7 @@ if [ -f "/var/lib/pacman/db.lck" ]; then
 	flunk "Package lock file '/var/lib/pacman/db.lck' exists. Please cleanup previous failed instalation before running."
 fi
 
-# Do stuff we want done every time
-init_host()
-
-flunk() {
-	echo "$@"
-	exit 1
-}
-
+# Functions, see Logic to make the magic happen
 init_host() {
 	# Host setup
 	echo $hostname > /etc/hostname
@@ -71,6 +69,14 @@ init_host() {
 	pacman --noconfirm -S base-devel
 	pacman --noconfirm -S mysql
 }
+
+# Logic
+
+# Do stuff we want done every time
+init_host()
+
+exit
+#old stuff
 case $1 in
 	vmode)
 		pacman -S fbset
