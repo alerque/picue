@@ -2,70 +2,76 @@
 
 # Options
 hostname=picue
-
+timezone=Turkey
 
 # Get off on the right foot
 cd
 test "$UID" -eq 0 || flunk "Need to be root"
+
+
+if [ -f "/var/lib/pacman/db.lck" ]; then
+	flunk "Package lock file '/var/lib/pacman/db.lck' exists. Please cleanup previous failed instalation before running."
+fi
+
+# Do stuff we want done every time
+init_host()
 
 function flunk () {
 	echo $*
 	exit 1
 }
 
+function init_host() {
+	# Host setup
+	echo $hostname > /etc/hostname
+	ln -sf /usr/share/zoneinfo/Turkey /etc/localtime
+	cat <<- EOF > /etc/locale.gen
+		en_US.UTF-8 UTF-8
+		EOF
+	locale-gen
 
+	passwd <<- EOF
+		picue$hostname
+		picue$hostname
+		EOF
+
+	#pacman --noconfirm -Syu
+	#pacman-key --init
+	return
+
+	# TODO: check and if possible grow main partition
+	do_expand_rootfs() {
+		pacman --noconfirm -S parted
+		#SOURCE: https://github.com/asb/raspi-config/blob/master/raspi-config
+	fdisk /dev/mmcblk0 <<- EOF
+		p
+		d
+		2
+		n
+		p
+		2
+
+
+		p
+		w
+		EOF
+	partprobe
+	resize2fs /dev/mmcblk0p2
+	}
+
+	# TODO: find out if this is even legit any more now that Arch as some pi specific packages
+	#if [ $(uname -m) == "armv6l" ]; then
+	#	curl -L http://goo.gl/1BOfJ > /usr/bin/rpi-update && chmod +x /usr/bin/rpi-update
+	#	rpi-update
+	#fi
+
+	pacman --noconfirm -S xorg-server xorg-xinit xorg-server-utils xf86-video-fbdev mesa xf86-input-evdev
+	pacman --noconfirm -S alsa-firmware alsa-utils
+	pacman --noconfirm -S vim sudo awesome git rxvt-unicode tmux gnu-netcat zsh ttf-liberation
+	pacman --noconfirm -S base-devel
+	pacman --noconfirm -S mysql
+}
 case $1 in
-	1|host)
-		# Host setup
-		echo $hostname > /etc/hostname
-		ln -sf /usr/share/zoneinfo/Turkey /etc/localtime
-		echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
-		locale-gen
-
-		passwd <<- EOF
-			picue$hostname
-			picue$hostname
-			EOF
-
-		if [ -f "/var/lib/pacman/db.lck" ]; then
-			echo "Package lock file '/var/lib/pacman/db.lck' exists. Please cleanup previous failed instalation before running."
-			exit
-		fi
-
-		# TODO: check and if possible grow main partition
-		do_expand_rootfs() {
-			pacman --noconfirm -S parted
-			#SOURCE: https://github.com/asb/raspi-config/blob/master/raspi-config
-		fdisk /dev/mmcblk0 <<- EOF
-			p
-			d
-			2
-			n
-			p
-			2
-
-
-			p
-			w
-			EOF
-		partprobe
-		resize2fs /dev/mmcblk0p2
-		}
-
-		# TODO: find out if this is even legit any more now that Arch as some pi specific packages
-		#if [ $(uname -m) == "armv6l" ]; then
-		#	curl -L http://goo.gl/1BOfJ > /usr/bin/rpi-update && chmod +x /usr/bin/rpi-update
-		#	rpi-update
-		#fi
-
-		pacman --noconfirm -Syu
-		pacman-key --init
-		pacman --noconfirm -S xorg-server xorg-xinit xorg-server-utils xf86-video-fbdev mesa xf86-input-evdev
-		pacman --noconfirm -S alsa-firmware alsa-utils
-		pacman --noconfirm -S vim sudo awesome git rxvt-unicode tmux gnu-netcat zsh ttf-liberation
-		pacman --noconfirm -S base-devel
-		pacman --noconfirm -S mysql
-	;;
 	vmode)
 		pacman -S fbset
 		function setvmode() {
