@@ -1,29 +1,32 @@
 picue
 =====
 
-Setup Lyricue on a Raspberry Pi
+	version=alpha
 
-1. Download archlinux image via [this torrent](http://downloads.raspberrypi.org/images/archlinuxarm/archlinux-hf-2013-02-11/archlinux-hf-2013-02-11.zip.torrent).
+The easy way to setup a lyricue display server on a Raspberry Pi:
 
-2. Unzip image and write to SD card
+1. Download the lastest ArchLinux disk image via [this torrent](http://downloads.raspberrypi.org/images/archlinuxarm/archlinux-hf-2013-02-11/archlinux-hf-2013-02-11.zip.torrent).
+
+2. Unzip the image and copy it to an SD card (at least 2GB)
 
         unzip archlinux-hf-2013-02-11.zip
         dd bs=1M if=archlinux-hf-2013-02-11.img of=/dev/sdX
 
-3. Move SD card to Pi and boot it
+3. Put the SD card in your Pi and boot it up
 
 4. Login via ssh or console
 
-    root/root
+    	Username: root
+		Password: root
 
-4. Execute init script to configure archlinux with a graphical interface
+4. Download and execute the setup script in one easy step that will auto configure the ArchLinux envoronment, compile Lyricue and configure the output:
 
         sh <(curl https://raw.github.com/alerque/picue/master/archlinux_init.sh)
 	
-	or
+	or the short URL version if you are typing on the console:
 
 		sh <(curl -L http://goo.gl/xxGyv)
 
-        reboot
+5. Wait a while. The system will reboot twice in the process of setting everything up.
 
-5. Build and install lyricue
+6. Welcome to your Lyricue display.

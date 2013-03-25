@@ -4,6 +4,7 @@
 hostname=picue
 timezone=Turkey
 
+# Generic stuff we're always going to need
 flunk() {
 	echo "$@"
 	exit 1
