@@ -9,10 +9,27 @@ flunk() {
 	exit 1
 }
 
-# Get off on the right foot
-cd
+# Get off on the right foot. We don't know where we're coming from
+cd /root
+systemctl disable picue-setup
+rm /usr/lib/systemd/system/picue-setup.service
 test "$UID" -eq 0 || flunk "Need to be root"
 
+reboot_and_continue() {
+	cat <<- EOF > /usr/lib/systemd/system/picue-setup.service
+		[Unit]
+		Description=Return to where Picue setup script left off
+		
+		[Service]
+		ExecStart=/bin/sh <(/bin/curl -L http://goo.gl/xxGyv)
+		Type=oneshot
+
+		[Install]
+		WantedBy=multi-user.target
+		EOF
+	systemctl enable picue-setup && reboot
+	exit
+}
 
 if [ -f "/var/lib/pacman/db.lck" ]; then
 	flunk "Package lock file '/var/lib/pacman/db.lck' exists. Please cleanup previous failed instalation before running."
@@ -56,7 +73,8 @@ init_host() {
 			p
 			w
 			EOF
-		partprobe
+		reboot_and_continue
+	else
 		resize2fs /dev/mmcblk0p2
 	fi
 
