@@ -92,17 +92,17 @@ init_host() {
 }
 
 install_packages() {
-	pacman --noconfirm -S xorg-server xorg-xinit xorg-server-utils xf86-video-fbdev xf86-input-evdev mesa 
-	pacman --noconfirm -S alsa-firmware alsa-utils
-	pacman --noconfirm -S zsh vim sudo git tmux gnu-netcat
-	pacman --noconfirm -S awesome rxvt-unicode ttf-liberation
-	pacman --noconfirm -S mysql
+	pacman --noconfirm -S --needed xorg-server xorg-xinit xorg-server-utils xf86-video-fbdev xf86-input-evdev mesa 
+	pacman --noconfirm -S --needed alsa-firmware alsa-utils
+	pacman --noconfirm -S --needed zsh vim sudo git tmux gnu-netcat
+	pacman --noconfirm -S --needed awesome rxvt-unicode ttf-liberation
+	pacman --noconfirm -S --needed mysql
 	
 }
 
 build_lyricue() {
 	pushd $PWD
-	pacman --noconfirm -S base-devel
+	pacman --noconfirm -S --needed base-devel
 	if [ -d "~/picue" ]; then
 		cd picue
 		git pull
@@ -200,7 +200,7 @@ exit
 #old stuff
 case $1 in
 	fbdev_driver)
-		pacman --noconfirm -S fbset
+		pacman --noconfirm -S --needed fbset
 		setvmode() {
 			cat <<- EOF >> /boot/config.txt
 			framebuffer_depth=32
@@ -215,7 +215,7 @@ case $1 in
 	;;
 	2|vbox)
 		if lspci 2> /dev/null | grep -c VirtualBox; then
-			pacman --noconfirm -S openssh virtualbox-guest-utils
+			pacman --noconfirm -S --needed openssh virtualbox-guest-utils
 			systemctl start sshd
 			modprobe -a vboxguest vboxsf vboxvideo
 			echo "vboxguest
