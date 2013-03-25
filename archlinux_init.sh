@@ -21,9 +21,11 @@ reboot_and_continue() {
 		[Unit]
 		Description=Picue setup script post-reboot continue script
 		ConditionPathExists=/root/picue-setup.sh
+		Requires=network.target
+		After=network.target
 		
 		[Service]
-		Type=forking
+		Type=oneshot
 		TimeoutSec=0
 		StandardOutput=tty
 		RemainAfterExit=yes
@@ -98,7 +100,6 @@ install_packages() {
 	pacman --noconfirm -S --needed zsh vim sudo git tmux gnu-netcat
 	pacman --noconfirm -S --needed awesome rxvt-unicode ttf-liberation
 	pacman --noconfirm -S --needed mysql
-	
 }
 
 build_lyricue() {

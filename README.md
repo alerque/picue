@@ -12,7 +12,7 @@ The easy way to setup a lyricue display server on a Raspberry Pi:
         unzip archlinux-hf-2013-02-11.zip
         dd bs=1M if=archlinux-hf-2013-02-11.img of=/dev/sdX
 
-3. Put the SD card in your Pi and boot it up
+3. Put the SD card in your Pi and boot it up.
 
 4. Login via ssh or console
 
