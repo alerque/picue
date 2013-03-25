@@ -73,7 +73,7 @@ init_host() {
 # Logic
 
 # Do stuff we want done every time
-init_host()
+init_host
 
 exit
 #old stuff
