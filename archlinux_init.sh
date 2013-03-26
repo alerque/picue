@@ -10,7 +10,12 @@ flunk() {
 	exit 1
 }
 
+set_retry_flag() {
+	retry_flag=y
+}
+
 # Get off on the right foot. We don't know where we're coming from
+retry_flag=
 cd /root
 test "$UID" -eq 0 || flunk "Need to be root"
 
@@ -105,7 +110,7 @@ install_packages() {
 build_lyricue() {
 	pushd $PWD
 	pacman --noconfirm -S --needed base-devel
-	if [ -d "~/picue" ]; then
+	if [ -d "/root/picue" ]; then
 		cd picue
 		git pull
 	else
@@ -185,11 +190,17 @@ configure_x() {
 }
 
 # Logic
-init_host
-install_packages
-build_lyricue
-setup_mysql
-configure_x
+init_host || set_retry_flag
+install_packages || set_retry_flag
+build_lyricue || set_retry_flag
+setup_mysql || set_retry_flag
+configure_x || set_retry_flag
+
+if [ "$retry_flag" = "y" ]; then
+	echo "At least one operation failed, will reboot and try again in 1 minute"
+	sleep 60
+	reboot_and_continue
+fi
 
 # Cleanup after ourselves
 if [ -f "/usr/lib/systemd/system/picue-setup.service" ]; then
