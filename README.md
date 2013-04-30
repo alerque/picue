@@ -43,6 +43,9 @@ picue on VirtualBox
   * Memory: 256 MB
   * Hard Drive: 4 GB
 
-3. Connect the CD drive image to the iso file downloaded above
+3. Open VM settings and...
+
+  * Change the boot order to HD, CDROM
+  * Connect the CD drive image to the iso file downloaded above
 
 4. Continue with #4 above […]

@@ -53,7 +53,9 @@ reboot_and_continue() {
 		[Install]
 		WantedBy=multi-user.target
 		EOF
-	$cmd systemctl --no-reload enable picue-setup && reboot
+	$cmd systemctl --no-reload enable picue-setup
+	test -z "$prefix" || umount /mnt
+	reboot
 	exit
 }
 
@@ -88,7 +90,6 @@ init_vbox() {
 			genfstab -p /mnt >> /mnt/etc/fstab
 			arch-chroot mkinitcpio -p linux
 		fi
-		umount /mnt
 		reboot_and_continue
 	fi
 }
