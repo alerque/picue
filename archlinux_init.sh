@@ -150,6 +150,7 @@ install_packages() {
 	pacman --noconfirm -S --needed zsh vim sudo git tmux gnu-netcat
 	pacman --noconfirm -S --needed awesome rxvt-unicode ttf-liberation
 	pacman --noconfirm -S --needed mysql
+	#pacman --noconfirm -S --needed tigervnc
 }
 
 build_pkg() {
