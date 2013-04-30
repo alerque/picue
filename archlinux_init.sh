@@ -11,13 +11,20 @@ flunk() {
 }
 
 set_retry_flag() {
-	retry_flag=y
+	retry_flag=true
 }
 
 # Get off on the right foot. We don't know where we're coming from
 retry_flag=
 cd /root
 test "$UID" -eq 0 || flunk "Need to be root"
+
+# Setup is a little different in VirtualBox than on the Raspberry Pi
+if lspci 2> /dev/null | grep -c VirtualBox; then
+	vbox=true
+else
+	vbox=false
+fi
 
 reboot_and_continue() {
 	curl -L http://goo.gl/xxGyv > /root/picue-setup.sh
@@ -107,15 +114,16 @@ install_packages() {
 	pacman --noconfirm -S --needed mysql
 }
 
-build_lyricue() {
+build_pkg() {
 	pushd $PWD
+	cd
 	pacman --noconfirm -S --needed base-devel
-	if [ -d "/root/picue" ]; then
-		cd picue
+	if [ -d "$1" ]; then
+		cd $1
 		git pull
 	else
-		git clone git://github.com/alerque/picue.git
-		cd picue
+		git clone git://github.com/alerque/$1.git
+		cd $1
 	fi
 	makepkg --asroot --noconfirm -s -i
 	popd
@@ -192,11 +200,14 @@ configure_x() {
 # Logic
 init_host || set_retry_flag
 install_packages || set_retry_flag
-build_lyricue || set_retry_flag
+build_pkg picue || set_retry_flag
+if [ ! "$vbox" = "true" ]; then
+	build_pkg fbvnc || set_retry_flag
+fi
 setup_mysql || set_retry_flag
 configure_x || set_retry_flag
 
-if [ "$retry_flag" = "y" ]; then
+if [ "$retry_flag" = "true" ]; then
 	echo "At least one operation failed, will reboot and try again in 1 minute"
 	sleep 60
 	reboot_and_continue
