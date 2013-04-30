@@ -30,3 +30,19 @@ The easy way to setup a lyricue display server on a Raspberry Pi:
 5. Wait a while. The system will reboot twice in the process of setting everything up.
 
 6. Welcome to your Lyricue display.
+
+picue on VirtualBox
+=====
+
+1. Download the latest ARchLinux iso image via [this torrent](https://www.archlinux.org/releng/releases/2013.04.01/torrent/)
+
+2. Create a new machine in VirtualBox
+
+  * Type: Linux
+  * Version: ArchLinux
+  * Memory: 256 MB
+  * Hard Drive: 4 GB
+
+3. Connect the CD drive image to the iso file downloaded above
+
+4. Continue with #4 above […]
