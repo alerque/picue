@@ -55,6 +55,31 @@ if [ -f "/var/lib/pacman/db.lck" ]; then
 fi
 
 # Functions, see Logic to make the magic happen
+init_vbox() {
+	if [ "$(blkid -o value -s TYPE /dev/loop0)" = "squashfs" ]; then
+		if [ ! -b "/dev/sda1" ]; then
+			fdisk /dev/sda <<- EOF
+				n
+				p
+				1
+
+
+				w
+				EOF
+				partprobe /dev/sda
+		fi
+		if [ -z "$(blkid -o value -s TYPE /dev/sda1)" ]; then
+			mkfs.ext4 /dev/sda1
+		fi
+		if ! mount | grep -q sda1; then
+			mkdir -p /mnt
+			mount /dev/sda1 /mnt
+		fi
+		if [ ! -f "/mnt/etc/fstab" ]; then
+			pacstrap /mnt base
+		fi
+	fi
+}
 init_host() {
 	# Host setup
 	echo $hostname > /etc/hostname
@@ -198,6 +223,9 @@ configure_x() {
 }
 
 # Logic
+if [ ! "$vbox" = "true" ]; then
+	init_vbox || set_retry_flag
+fi
 init_host || set_retry_flag
 install_packages || set_retry_flag
 build_pkg picue || set_retry_flag
