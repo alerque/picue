@@ -27,9 +27,16 @@ else
 fi
 
 reboot_and_continue() {
-	curl -L http://goo.gl/xxGyv > /root/picue-setup.sh
-	chmod 755 /root/picue-setup.sh
-	cat <<- EOF > /usr/lib/systemd/system/picue-setup.service
+	if mount | grep -q 'sda1 on /mnt'; then
+		prefix=/mnt
+		cmd="arch-chroot /mnt"
+	else
+		prefix=
+		cmd=
+	fi
+	curl -L http://goo.gl/xxGyv > $prefix/root/picue-setup.sh
+	chmod 755 $prefix/root/picue-setup.sh
+	cat <<- EOF > $prefix/usr/lib/systemd/system/picue-setup.service
 		[Unit]
 		Description=Picue setup script post-reboot continue script
 		ConditionPathExists=/root/picue-setup.sh
@@ -46,7 +53,7 @@ reboot_and_continue() {
 		[Install]
 		WantedBy=multi-user.target
 		EOF
-	systemctl --no-reload enable picue-setup && reboot
+	$cmd systemctl --no-reload enable picue-setup && reboot
 	exit
 }
 
@@ -77,7 +84,12 @@ init_vbox() {
 		fi
 		if [ ! -f "/mnt/etc/fstab" ]; then
 			pacstrap /mnt base
+			arch-chroot /mnt pacman --noconfirm -S syslinux
+			genfstab -p /mnt >> /mnt/etc/fstab
+			arch-chroot mkinitcpio -p linux
 		fi
+		umount /mnt
+		reboot_and_continue
 	fi
 }
 init_host() {
