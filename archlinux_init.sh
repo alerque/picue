@@ -88,10 +88,12 @@ init_vbox() {
 		fi
 		if [ ! -f "/mnt/etc/fstab" ]; then
 			pacstrap /mnt base
-			arch-chroot /mnt pacman --noconfirm -S syslinux
-			arch-chroot /mnt syslinux-install_update -i -a -m
 			genfstab -p /mnt >> /mnt/etc/fstab
 			arch-chroot mkinitcpio -p linux
+		fi
+		if ! fdisk -l /dev/sda | grep dev/sda1 | grep -q \*; then
+			arch-chroot /mnt pacman --noconfirm -S syslinux
+			arch-chroot /mnt syslinux-install_update -i -a -m
 		fi
 		reboot_and_continue
 	fi
