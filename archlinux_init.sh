@@ -103,6 +103,7 @@ init_vbox() {
 			vboxsf
 			vboxvideo
 			EOF
+		arch-chroot /mnt systemctl enable dhcpcd@enp0s3.service
 		reboot_and_continue
 	fi
 }
