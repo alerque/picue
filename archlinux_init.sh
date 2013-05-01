@@ -94,6 +94,7 @@ init_vbox() {
 		if ! fdisk -l /dev/sda | grep dev/sda1 | grep -q \*; then
 			arch-chroot /mnt pacman --noconfirm -S syslinux
 			arch-chroot /mnt syslinux-install_update -i -a -m
+			arch-chroot /mnt sed -i /boot/syslinux/syslinux.cfg -e 's/sda3/sda1/g'
 		fi
 		reboot_and_continue
 	fi
