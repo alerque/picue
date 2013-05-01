@@ -56,7 +56,7 @@ reboot_and_continue() {
 		WantedBy=multi-user.target
 		EOF
 	$cmd systemctl --no-reload enable picue-setup
-	test -z "$prefix" || umount /mnt
+	test -n "$prefix" && umount /mnt
 	reboot
 	exit
 }
@@ -89,6 +89,7 @@ init_vbox() {
 		if [ ! -f "/mnt/etc/fstab" ]; then
 			pacstrap /mnt base
 			arch-chroot /mnt pacman --noconfirm -S syslinux
+			arch-chroot /mnt syslinux-install_update -i -a -m
 			genfstab -p /mnt >> /mnt/etc/fstab
 			arch-chroot mkinitcpio -p linux
 		fi
