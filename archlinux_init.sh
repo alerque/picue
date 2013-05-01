@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 # Options
 hostname=picue
 timezone=Turkey
@@ -20,7 +22,7 @@ cd /root
 test "$UID" -eq 0 || flunk "Need to be root"
 
 # Setup is a little different in VirtualBox than on the Raspberry Pi
-if lspci 2> /dev/null | grep -c VirtualBox; then
+if lspci 2> /dev/null | grep -q VirtualBox; then
 	vbox=true
 else
 	vbox=false
