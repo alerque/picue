@@ -95,6 +95,7 @@ init_vbox() {
 		reboot_and_continue
 	fi
 }
+
 init_host() {
 	# Host setup
 	echo $hostname > /etc/hostname
@@ -239,7 +240,7 @@ configure_x() {
 }
 
 # Logic
-if [ ! "$vbox" = "true" ]; then
+if [ "$vbox" = "true" ]; then
 	init_vbox || set_retry_flag
 fi
 init_host || set_retry_flag
