@@ -96,6 +96,13 @@ init_vbox() {
 			arch-chroot /mnt syslinux-install_update -i -a -m
 			arch-chroot /mnt sed -i /boot/syslinux/syslinux.cfg -e 's/sda3/sda1/g'
 		fi
+		arch-chroot /mnt pacman --noconfirm -S --needed openssh virtualbox-guest-utils
+		arch-chroot /mnt systemctl start sshd
+		cat <<- EOF > /mnt/etc/modules-load.d/virtualbox.conf
+			vboxguest
+			vboxsf
+			vboxvideo
+			EOF
 		reboot_and_continue
 	fi
 }
@@ -288,12 +295,6 @@ case $1 in
 	;;
 	2|vbox)
 		if lspci 2> /dev/null | grep -c VirtualBox; then
-			pacman --noconfirm -S --needed openssh virtualbox-guest-utils
-			systemctl start sshd
-			modprobe -a vboxguest vboxsf vboxvideo
-			echo "vboxguest
-			vboxsf
-			vboxvideo" > /etc/modules-load.d/virtualbox.conf
 			#echo 'VBoxClient-all &' >> .xinitrc
 		fi
 	;;
