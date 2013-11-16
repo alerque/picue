@@ -22,7 +22,7 @@ changelog=
 source=(http://www.lyricue.org/archive/${pkgname}_$pkgver.tar.gz https://github.com/alerque/picue/raw/master/clutter-gst.patch https://github.com/alerque/picue/raw/master/gstreamer.patch)
 noextract=()
 md5sums=('e4646b89cee70f05c11f6362a27f369a'
-         '2a7d01a8bf2db4881b93b64995668b40'
+         'b2bc18a48be5f8fc3ebe8fbc5d7d4fa0'
          'f999984a8f5659129b237f25c657cfae')
 
 build() {
