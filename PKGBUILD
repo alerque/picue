@@ -1,6 +1,6 @@
 # Maintainer: Caleb Maclennan <caleb@alerque.com>
 pkgname=lyricue
-pkgver=3.5.5
+pkgver=3.6.5
 pkgrel=1
 epoch=
 pkgdesc="GNU Lyric Display System, client interface"
@@ -8,7 +8,7 @@ arch=(x86_64 armv6h)
 url="http://www.lyricue.org"
 license=('GPL')
 groups=()
-depends=(clutter clutter-gtk clutter-gst mysql mysql-clients perl-dbi pango-perl gtk2-perl perl-uri perl-xml-simple gnome-perl perl-file-mimeinfo perl-dbd-mysql)
+depends=(clutter clutter-gtk clutter-gst mariadb mariadb-clients perl-dbi pango-perl gtk2-perl perl-uri perl-xml-simple gnome-perl perl-file-mimeinfo perl-dbd-mysql)
 makedepends=(intltool pkg-config patch gcc make)
 checkdepends=()
 optdepends=()
@@ -21,9 +21,9 @@ install=
 changelog=
 source=(http://www.lyricue.org/archive/${pkgname}_$pkgver.tar.gz https://github.com/alerque/picue/raw/master/clutter-gst.patch https://github.com/alerque/picue/raw/master/gstreamer.patch)
 noextract=()
-md5sums=('fb32a72110c7f1dd006fbca9828dc5da'
+md5sums=('e4646b89cee70f05c11f6362a27f369a'
          '2a7d01a8bf2db4881b93b64995668b40'
-         'b2bc18a48be5f8fc3ebe8fbc5d7d4fa0')
+         'f999984a8f5659129b237f25c657cfae')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
