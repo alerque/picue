@@ -1,14 +1,14 @@
 # Maintainer: Caleb Maclennan <caleb@alerque.com>
 pkgname=lyricue
 pkgver=3.6.5
-pkgrel=5
+pkgrel=7
 pkgdesc="GNU Lyric Display System, server and client"
 epoch=
-arch=(x86_64 armv6h)
+arch=(x86_64 i686 armv6h)
 url="http://www.lyricue.org"
 license=('GPL')
 groups=()
-depends=(clutter clutter-gtk clutter-gst mariadb mariadb-clients perl-dbi pango-perl gtk2-perl perl-uri perl-xml-simple gnome-perl perl-file-mimeinfo perl-dbd-mysql perl-class-accessor-lvalue perl-net-rendezvous-publish perl-want perl-locale-gettext perl-class-accessor)
+depends=(clutter clutter-gtk clutter-gst mariadb mariadb-clients perl-dbi pango-perl gtk2-perl perl-uri perl-xml-simple gnome-perl perl-file-mimeinfo perl-dbd-mysql perl-class-accessor-lvalue perl-net-rendezvous-publish perl-want perl-locale-gettext perl-class-accessor perl-net-bonjour)
 makedepends=(intltool pkg-config patch gcc make)
 checkdepends=()
 optdepends=(perl-gtk2-trayicon)
